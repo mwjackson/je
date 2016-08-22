@@ -1,6 +1,16 @@
 from unittest import TestCase
 
-from just_eat import query_outcode
+from just_eat import query_outcode, _get_request
+
+
+class UnitTests(TestCase):
+    def test_that_request_headers_are_set(self):
+        resp = _get_request('A')
+
+        self.assertEqual(resp.request.headers['accept-tenant'], 'uk')
+        self.assertEqual(resp.request.headers['accept-language'], 'en-GB')
+        self.assertEqual(resp.request.headers['authorization'], 'Basic VGVjaFRlc3RBUEk6dXNlcjI=')
+        self.assertEqual(resp.request.headers['host'], 'public.je-apis.com')
 
 
 class AcceptanceTests(TestCase):
