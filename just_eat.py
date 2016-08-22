@@ -5,6 +5,11 @@ import json
 
 
 def query_outcode(code):
+    """
+    pretty prints a list of restaurants for a given outcode, sorted by rating desc
+    :param code: the outcode to search by
+    :return: the data (for testing)
+    """
     resp = _get_request(code)
 
     restaurants = _map_response(resp.text)
@@ -15,6 +20,12 @@ def query_outcode(code):
 
 
 def _get_request(code):
+    """
+    perform the get using requests
+    :param code: the code to include in the querystring
+    :return: response object
+    """
+    
     return requests.get('https://public.je-apis.com/restaurants?q={0}'.format((code or '').lower()), headers={
         'accept-tenant': 'uk',
         'accept-language': 'en-GB',
@@ -24,6 +35,12 @@ def _get_request(code):
 
 
 def _map_response(data):
+    """
+    map the text to a dict via json and select the relevant keys
+    :param data:
+    :return: a dict of the data
+    """
+
     data = json.loads(data)
 
     restaurants = data.get('Restaurants', [])
@@ -40,6 +57,12 @@ def _map_cuisine(r):
 
 
 def _format_data(data):
+    """
+    format the data in a tabular fashion
+    :param data:
+    :return:
+    """
+
     header = 'Name'.ljust(50) + 'Rating'.ljust(20) + 'Cuisines'
     return u'\n'.join(['', header] +
                      [r['Name'].ljust(50) + str(r['RatingAverage']).ljust(20) + ', '.join(r.get('CuisineTypes', [])) for r in data])
